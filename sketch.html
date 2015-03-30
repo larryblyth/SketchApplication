@@ -18,9 +18,13 @@
           <span><input type="radio" name="tool" value="pencil" checked data-ng-model="tool"> Pencil</span>
           <span><input type="radio" name="tool" value="line" data-ng-model="tool"> Line</span>
           <span><input type="radio" name="tool" value="rectangle" data-ng-model="tool"> Rectangle</span>
+          <span><input type="radio" name="tool" value="square" data-ng-model="tool"> Square</span>
+          <br>
           <span><input type="radio" name="tool" value="circle" data-ng-model="tool"> Circle</span>
-          <span><input type="radio" name="tool" value="image" data-ng-model="tool"> Image</span>
+          <span><input type="radio" name="tool" value="ellipse" data-ng-model="tool"> Ellipse</span>
+          <span><input type="radio" name="tool" value="polygon" data-ng-model="tool"> Polygon</span>
           <div><button data-ng-click="undo()">Undo</button></div>
+          <div id="endShape"><button data-ng-click="endPolygon()">End shape</button></div>
         </div>
 
         <div id="drawOptions">
@@ -38,9 +42,10 @@
 
           <div id="colorTarget" data-ng-hide="isToolNameSelected('image')">
             <div title="Line color" data-ng-class="lineColorCss" data-ng-click="changeColorTarget('line')"></div>
-            <div title="Fill color" data-ng-class="fillColorCss" data-ng-click="changeColorTarget('fill')"></div>
+            <div id="saveSketch"><button data-ng-click="saveSketch()">Save</button></div>
+              <div id="loadSketch"><button data-ng-click="loadSketch()">Load</button></div>
             <br>
-            <span>Line</span> <span>Fill<span>
+            <span>Line</span>
           </div>
 
           <div id="lineWidth" data-ng-hide="isToolNameSelected('image')">

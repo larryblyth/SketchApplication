@@ -1,14 +1,10 @@
 sketchApp.factory("sketchRenderer", function () {
 	"use strict";
-	var context,
-			renderPencil,
-			renderLine,
-			renderRectangle,
-			renderCircle,
-			renderAll,
-			buffer = [];
+	var context;
+    var	buffer = [];
+    var savedSketch;
 
-	renderPencil = function (data) {
+    var	renderPencil = function (data) {
 		context.beginPath();					
 		context.lineCap = 'round';
 		context.strokeStyle = data.Color;
@@ -20,7 +16,7 @@ sketchApp.factory("sketchRenderer", function () {
 		context.stroke();
 	};
 
-	renderLine = function (data) {
+    var	renderLine = function (data) {
 		context.beginPath();
 		context.strokeStyle = data.LineColor;
 		context.lineWidth = data.LineWidth;
@@ -30,7 +26,18 @@ sketchApp.factory("sketchRenderer", function () {
 		context.stroke();
 	};
 
-	renderRectangle = function (data) {
+    var	renderPolygon = function (data) {
+        context.beginPath();
+        context.strokeStyle = data.LineColor;
+        context.lineWidth = data.LineWidth;
+        context.lineCap = 'round';
+        context.moveTo(data.StartX, data.StartY);
+        context.lineTo(data.EndX, data.EndY);
+        context.stroke();
+    };
+
+
+    var	renderRectangle = function (data) {
 		context.beginPath();
 		context.strokeStyle = data.LineColor;
 		context.fillStyle = data.FillColor;
@@ -40,7 +47,17 @@ sketchApp.factory("sketchRenderer", function () {
 		context.stroke();
 	};
 
-	renderCircle = function (data) {
+    var	renderSquare = function (data) {
+        context.beginPath();
+        context.strokeStyle = data.LineColor;
+        context.fillStyle = data.FillColor;
+        context.lineWidth = data.LineWidth;
+        context.rect(data.StartX, data.StartY, data.Side, data.Side);
+        if (data.FillShape)	context.fill();
+        context.stroke();
+    };
+
+    var	renderCircle = function (data) {
 		context.beginPath();
 		context.strokeStyle = data.LineColor;
 		context.fillStyle = data.FillColor;
@@ -49,8 +66,23 @@ sketchApp.factory("sketchRenderer", function () {
 		if (data.FillShape)	context.fill();
 		context.stroke();
 	};
-	
-	renderAll = function () {
+
+    var	renderEllipse = function (data) { //ctx,cx,cy,rx,ry,style
+        if(context.ellipse)
+        {
+            context.save();
+            context.beginPath();
+            context.strokeStyle = data.LineColor;
+            context.fillStyle = data.FillColor;
+            context.lineWidth = data.LineWidth;
+            context.ellipse(data.StartX, data.StartY, data.Radius, data.Radius/2, 0, 0, Math.PI*2);
+            if (data.FillShape)	context.fill();
+            context.stroke();
+            context.restore();
+        }
+    };
+
+    var	renderAll = function () {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		for (var i = 0; i < buffer.length; i++) {
 			switch (buffer[i].ToolName) {
@@ -66,12 +98,23 @@ sketchApp.factory("sketchRenderer", function () {
 				case "line":
 					renderLine(buffer[i]);
 					break;
-				case "image":
-					renderImage(buffer[i]);
-					break;
+                case "ellipse":
+                    renderEllipse(buffer[i]);
+                    break;
+                case "square":
+                    renderSquare(buffer[i]);
+                    break;
+                case "polygon":
+                    renderPolygon(buffer[i]);
+                    break;
 			}
 		}
 	};
+
+    var	save = function () {
+        console.log('saving sketch');
+        savedSketch = buffer;
+    };
 
 	return {
 		addToBuffer: function (data) {
@@ -96,9 +139,15 @@ sketchApp.factory("sketchRenderer", function () {
 				case "line":
 					renderLine(data);
 					break;
-				case "image":
-					renderImage(data);
-					break;
+                case "ellipse":
+                    renderEllipse(data);
+                    break;
+                case "square":
+                    renderSquare(data);
+                    break;
+                case "polygon":
+                    renderPolygon(data);
+                    break;
 			}
 		},
 
@@ -108,6 +157,31 @@ sketchApp.factory("sketchRenderer", function () {
 
 		undo: function () {
 			buffer.pop();			
-		}
+		},
+
+        save: function () {
+            save();
+            if (confirm('Would you like to start a new sketch?')) {
+                console.log('starting new sketch');
+                buffer = [];
+                renderAll();
+            } else {
+                console.log('continuing same sketch');
+            }
+        },
+
+        load: function () {
+            console.log('loading sketch');
+            if (confirm('Would you like to save the current sketch?')) {
+                save();
+            }
+
+            if(savedSketch.length>0) {
+                buffer = savedSketch;
+                renderAll();
+            } else {
+                alert('No saved sketches exist.')
+            }
+        }
 	};
 });
