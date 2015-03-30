@@ -4,6 +4,7 @@ sketchApp.factory("sketchRenderer", function () {
     var	buffer = [];
     var savedSketches = [];
     var clickMargin = 10;
+    var undoneShapes = [];
 
     var	renderPencil = function (data) {
 		context.beginPath();
@@ -208,8 +209,14 @@ sketchApp.factory("sketchRenderer", function () {
 		},
 
 		undo: function () {
-			buffer.pop();
+            undoneShapes.push(buffer.pop());
+            document.getElementById("redobutton").style.display='block';
 		},
+
+        redo: function () {
+            buffer.push(undoneShapes.pop());
+            if(undoneShapes.length==0) document.getElementById("redobutton").style.display='none';
+        },
 
         save: function (sketchName) {
             save(sketchName);
@@ -277,19 +284,19 @@ sketchApp.factory("sketchRenderer", function () {
                         }
                         break;
                     case "rectangle":
-
+                        //To-Do
                         break;
                     case "circle":
-
+                        //To-Do
                         break;
                     case "ellipse":
-
+                        //To-Do
                         break;
                     case "square":
-
+                        //To-Do
                         break;
                     case "polygon":
-
+                        //To-Do
                         break;
                     default:
                         console.log("findSelection: unknown tool: "+buffer[i].tool);

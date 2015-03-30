@@ -8,7 +8,9 @@
 </head>
 <body data-ng-controller="sketchController" data-ng-init="init()">
   <div id="container">
-      Sketch Name:<input type="text" data-ng-model="sketchTitle"/>
+      <div id="titleInput">
+          Sketch Name:<input type="text" data-ng-model="sketchTitle"/>
+      </div>
     <canvas id="canvas">
       Your browser does not support the canvas element.
     </canvas>
@@ -24,6 +26,7 @@
           <span><input type="radio" name="tool" value="ellipse" data-ng-model="tool"> Ellipse</span>
           <span><input type="radio" name="tool" value="polygon" data-ng-model="tool"> Polygon</span>
           <div><button data-ng-click="undo()">Undo</button></div>
+          <div id="redobutton"><button data-ng-click="redo()">Redo</button></div>
           <div id="endShape"><button data-ng-click="endPolygon()">End shape</button></div>
         </div>
 

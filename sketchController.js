@@ -135,7 +135,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
         selectMode = false;
 
         document.getElementById("endShape").style.display='none';
-        //$("endShape").hide();
+        document.getElementById("redobutton").style.display='none';
 		
 		canvas.onmousedown = function (e) {
             if(selectMode) {
@@ -147,6 +147,9 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 } else {
                     console.log('selected something!');
                     //console.log(selection);
+                    //selection contains data object for what was just selected
+
+                    //TO-DO
 
 
                 }
@@ -286,11 +289,21 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
         sketchRenderer.undo();
         sketchRenderer.renderAll();
         points = [];
-        startPos.x = 0;
-        startPos.y = 0;
-        endPos.x = 0;
-        endPos.y = 0;
+        //startPos.x = 0;
+        //startPos.y = 0;
+        //endPos.x = 0;
+        //endPos.y = 0;
     };
+
+    $scope.redo = function () {
+        sketchRenderer.redo();
+        sketchRenderer.renderAll();
+        //points = [];
+        //startPos.x = 0;
+        //startPos.y = 0;
+        //endPos.x = 0;
+        //endPos.y = 0;
+    }
 
     $scope.endPolygon = function () {
         console.log('ending open polygon');
