@@ -30,7 +30,7 @@
       <file leaf-file-name="sketch.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sketch.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="18.807692" vertical-offset="812" max-vertical-offset="1411">
+            <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="1428">
               <caret line="19" column="123" selection-start-line="19" selection-start-column="123" selection-end-line="19" selection-end-column="123" />
               <folding />
             </state>
@@ -40,8 +40,8 @@
       <file leaf-file-name="sketchRendererFactory.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/sketchRendererFactory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2850" max-vertical-offset="6919">
-              <caret line="181" column="14" selection-start-line="181" selection-start-column="8" selection-end-line="181" selection-end-column="14" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3077" max-vertical-offset="7259">
+              <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -50,8 +50,8 @@
       <file leaf-file-name="sketchController.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/sketchController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.42024013" vertical-offset="4668" max-vertical-offset="6647">
-              <caret line="289" column="12" selection-start-line="289" selection-start-column="12" selection-end-line="289" selection-end-column="12" />
+            <state vertical-scroll-proportion="0.25490198" vertical-offset="2734" max-vertical-offset="8619">
+              <caret line="170" column="82" selection-start-line="170" selection-start-column="82" selection-end-line="170" selection-end-column="82" />
               <folding />
             </state>
           </provider>
@@ -147,14 +147,10 @@
     <property name="recentsLimit" value="5" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
-      <method />
-    </configuration>
     <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
       <method />
     </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
-      <envs />
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <method />
     </configuration>
     <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
@@ -162,6 +158,10 @@
       <setting name="settingsFile" value="" />
       <setting name="serverType" value="INTERNAL" />
       <setting name="preferredDebugBrowser" value="Chrome" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
@@ -236,9 +236,9 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24963397" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -262,6 +262,30 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/sketch.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="1428">
+          <caret line="19" column="123" selection-start-line="19" selection-start-column="123" selection-end-line="19" selection-end-column="123" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/sketchRendererFactory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3077" max-vertical-offset="7259">
+          <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/sketchController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7990">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sketch.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="215" max-vertical-offset="1411">
@@ -300,7 +324,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sketch.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="18.807692" vertical-offset="812" max-vertical-offset="1411">
+        <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="1428">
           <caret line="19" column="123" selection-start-line="19" selection-start-column="123" selection-end-line="19" selection-end-column="123" />
           <folding />
         </state>
@@ -308,16 +332,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/sketchRendererFactory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2850" max-vertical-offset="6919">
-          <caret line="181" column="14" selection-start-line="181" selection-start-column="8" selection-end-line="181" selection-end-column="14" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3077" max-vertical-offset="7259">
+          <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/sketchController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42024013" vertical-offset="4668" max-vertical-offset="6647">
-          <caret line="289" column="12" selection-start-line="289" selection-start-column="12" selection-end-line="289" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.25490198" vertical-offset="2734" max-vertical-offset="8619">
+          <caret line="170" column="82" selection-start-line="170" selection-start-column="82" selection-end-line="170" selection-end-column="82" />
           <folding />
         </state>
       </provider>
