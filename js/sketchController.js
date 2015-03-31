@@ -166,7 +166,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                         "actionItems": deletedItems
                     };
 
-                    sketchRenderer.addToBuffer(deleteAction);
+                    sketchRenderer.addAction(deleteAction);
                 }
                 sketchRenderer.removeObjects(selection);
                 sketchRenderer.renderAll();
