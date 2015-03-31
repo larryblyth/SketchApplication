@@ -33,9 +33,18 @@ sketchApp.factory("sketchRenderer", function () {
         context.strokeStyle = data.LineColor;
         context.lineWidth = data.LineWidth;
         context.lineCap = 'round';
-        context.moveTo(data.StartX, data.StartY);
-        context.lineTo(data.EndX, data.EndY);
-        context.stroke();
+
+        /*======= Drawing poly-based on polygonPointValues ============*/
+        for(var i=0; i<data.Values.length-1; i++ ) {
+            context.moveTo(data.Values[i].pointX, data.Values[i].pointY);
+            context.lineTo(data.Values[i+1].pointX, data.Values[i+1].pointY);
+            context.stroke();
+        }
+        /* =================Old Code Below==================== */
+
+        //context.moveTo(data.StartX, data.StartY);
+        //context.lineTo(data.EndX, data.EndY);
+        //context.stroke();
     };
 
 
@@ -188,6 +197,10 @@ sketchApp.factory("sketchRenderer", function () {
 			buffer.push(data);
 		},
 
+        popBuffer: function() {
+            buffer.pop();
+        },
+
         removeObjects: function(selection) {
             for (var i in selection) {
                 var indexDelete = buffer.indexOf(selection[i]);
@@ -230,12 +243,29 @@ sketchApp.factory("sketchRenderer", function () {
 		},
 
 		undo: function () {
-            undoneShapes.push(buffer.pop());
+            var top = buffer.pop();
+
+            if(top.isAction == true){
+                for(var i=0; i< top.actionItems.length; i++){
+                    //things for different actions
+                }
+            }
+            else{
+                undoneShapes.push(top);
+            }
             document.getElementById("redobutton").style.display='block';
 		},
 
         redo: function () {
-            buffer.push(undoneShapes.pop());
+            var top = undoneShapes.pop();
+            if(top.isAction == true){
+                for(var i=0; i< top.actionItems.length; i++){
+                    //things for different actions
+                }
+            }
+            else{
+                buffer.push(top);
+            }
             if(undoneShapes.length==0) document.getElementById("redobutton").style.display='none';
         },
 
@@ -301,7 +331,32 @@ sketchApp.factory("sketchRenderer", function () {
                         found = CheckClickingLine(thisX,thisY,buffer[i].StartX,buffer[i].EndX,buffer[i].StartY,buffer[i].EndY);
                         break;
                     case "rectangle":
-                        //To-Do
+                        var recStartX = buffer[i].StartX;
+                        var recStartY = buffer[i].StartY;
+                        var recWidth = buffer[i].Width;
+                        var recHeight = buffer[i].Height;
+
+                        if(recHeight >= 0 && recWidth < 0) {
+                            if (thisX >= recStartX + recWidth && thisX <= recStartX && thisY <= recStartY + recHeight && thisY >= recStartY) {
+                                return buffer[i];
+                            }
+                        }
+                        else if(recHeight < 0 && recWidth >= 0) {
+                            if (thisX <= recStartX + recWidth && thisX >= recStartX && thisY >= recStartY + recHeight && thisY <= recStartY) {
+                                return buffer[i];
+                            }
+                        }
+                        else if(recHeight < 0 && recWidth < 0) {
+                            if (thisX >= recStartX + recWidth && thisX <= recStartX && thisY >= recStartY + recHeight && thisY <= recStartY) {
+                                return buffer[i];
+                            }
+                        }
+                        else { //both positive
+                            if (thisX <= recStartX + recWidth && thisX >= recStartX && thisY <= recStartY + recHeight && thisY >= recStartY) {
+                                return buffer[i];
+                            }
+                        }
+
                         break;
                     case "circle":
                         found = checkEllipse(thisX, thisY, buffer[i].StartX, buffer[i].StartY, buffer[i].Radius, buffer[i].Radius);
@@ -310,10 +365,32 @@ sketchApp.factory("sketchRenderer", function () {
                         found = checkEllipse(thisX, thisY, buffer[i].StartX, buffer[i].StartY, buffer[i].RadiusX, buffer[i].RadiusY);
                         break;
                     case "square":
-                        //To-Do
+
+                        var sqStartX = buffer[i].StartX;
+                        var sqStartY = buffer[i].StartY;
+                        var sqSide = buffer[i].Side;
+
+                        if(sqSide < 0) {
+                            if (thisX >= sqStartX + sqSide && thisX <= sqStartX && thisY >= sqStartY + sqSide && thisY <= sqStartY) {
+                                return buffer[i];
+                            }
+                        }
+                        else { //both positive
+                            if (thisX <= sqStartX + sqSide && thisX >= sqStartX && thisY <= sqStartY + sqSide && thisY >= sqStartY) {
+                                return buffer[i];
+                            }
+                        }
                         break;
                     case "polygon":
-                        //To-Do
+                        var points = buffer[i].Values;
+                        for(i=0; i<points.length-1; i++){
+                            found = CheckClickingLine(thisX,thisY,points[i].pointX, points[i+1].pointX, points[i].pointY, points[i+1].pointY);
+                            if(found){
+                                found = false;
+                                return buffer[i];
+                            }
+                        }
+
                         break;
                     default:
                         console.log("findSelection: unknown tool: "+buffer[i].tool);

@@ -6,6 +6,9 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
     var groups = [];
     var lastX, lastY;
     var mouseDrag = false;
+    var polygonPointValues = [];
+    var polygonPointIndex = 0;
+
     var renderPath = function (data) {
         if ($scope.tool === "rectangle" || $scope.tool === "line" || $scope.tool === "circle" || $scope.tool === "square" || $scope.tool === "ellipse" || $scope.tool === "polygon") {
             sketchRenderer.renderAll();
@@ -96,11 +99,12 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     ToolName: "polygon",
                     LineColor: colorValue[lineColorNumber],
                     LineWidth: $scope.lineWidth,
-                    StartX: startPos.x,
-                    StartY: startPos.y,
+                    //StartX: startPos.x,
+                    //StartY: startPos.y,
                     EndX: endPos.x,
                     EndY: endPos.y,
-                    Points: polygonPoints
+                    Points: polygonPoints,
+                    Values: polygonPointValues[polygonPointIndex]
                 };
                 break;
             default:
@@ -126,6 +130,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 	$scope.fillColorCss = "black";
 	$scope.fillShape = false;
 	$scope.colorTarget = "line";
+    $scope.midPolyDraw = false;
 
 // Keyboard presses
     $('body').on('keydown', function(event) {
@@ -221,11 +226,26 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 				endPos.x = lastPoint.x;
 				endPos.y = lastPoint.y;
 
-				data = createRenderObject();
+                console.log("lastPoint: " + JSON.stringify(lastPoint));
+
+
+                //if tool is polygon, need to switch to line for createRenderObject for proper "ghosting" effect
+                //polygons render differently than lines so without this it wouldn't happen
+                if($scope.tool == 'polygon'){
+                    $scope.tool = 'line';
+                    data = createRenderObject();
+                    $scope.tool = 'polygon';
+                }
+                else{
+                    data = createRenderObject();
+                }
 				renderPath(data);				
 			}			
 		};
-
+                    //values
+                        //points
+                            //x
+                            //y
 		canvas.onmouseup = function (e) {
             var thisX = (e.pageX - canvas.offsetLeft) - offset;
             var thisY = (e.pageY - canvas.offsetTop) - offset;
@@ -255,30 +275,59 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 }
                 mouseDrag = false;
                 mouseDown = false;
-            } else {
+            } else {            
                 if($scope.tool == 'polygon') {
                     thisX = (e.pageX - canvas.offsetLeft) - offset;
                     thisY = (e.pageY - canvas.offsetTop) - offset;
-                    var clickMargin = 5;
+
+
+                    var clickMargin = 7;
                     if( prevX - clickMargin < thisX && prevX + clickMargin > thisX   &&   prevY - clickMargin < thisY && prevY + clickMargin > thisY ) {
                         console.log('clicked on last point');
+
+                        polygonPointValues[polygonPointIndex].push({"pointX" : prevX,"pointY" : prevY});
+
                         var data = createRenderObject();
+                        sketchRenderer.popBuffer();
                         sketchRenderer.addToBuffer(data);
+                        $scope.midPolyDraw = false;
+                        $scope.$apply();
                         polygonPoints = 0;
+                        polygonPointIndex++;
+                        renderPath(data);
+
                         document.getElementById("endShape").style.display='none';
                     } else if(polygonPoints==0) {
+
                         //this is start of polygon
                         document.getElementById("endShape").style.display='block';
+                        $scope.midPolyDraw = true;
+                        $scope.$apply();
+
+                        //add a new entry in the array of entry arrays with starting point
+                        polygonPointValues.push([{"pointX" : thisX,"pointY" : thisY}]);
+
                         mouseDownEvent(e);
                         polygonPoints++;
+
                         //store this point so can detect if they click on it later
                         prevX = thisX;
                         prevY = thisY;
 
                     } else {
                         polygonPoints++;
+                        polygonPointValues[polygonPointIndex].push({"pointX" : thisX,"pointY" : thisY});
+
+                        //console.log("Values: "+ JSON.stringify(polygonPointValues));
+                        //console.log("currentPolyArr: " + JSON.stringify(polygonPointValues[polygonPointIndex]));
+
+
                         console.log('doing polygon stuff');
                         var data = createRenderObject();
+                        //remove last version of polygon before rea-dding it with new data
+                        if(polygonPoints != 2) {
+                            sketchRenderer.popBuffer();
+                        }
                         sketchRenderer.addToBuffer(data);
                         mouseDownEvent(e);
                     }
@@ -311,18 +360,14 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 color: colorValue[lineColorNumber]
             });
 
+            console.log("push in DOWN: " + (e.pageX - canvas.offsetLeft) - offset + " " + (e.pageY - canvas.offsetTop) - offset);
+
             //mouseDown = true;
-            if($scope.tool == 'polygon' && points.length>0) {
-                startPos.x = points[points.length-1].x;
-                startPos.y = points[points.length-1].y;
-                endPos.x = points[points.length-1].x;
-                endPos.y = points[points.length-1].y;
-            } else {
-                startPos.x = points[0].x;
-                startPos.y = points[0].y;
-                endPos.x = points[0].x;
-                endPos.y = points[0].y;
-            }
+            startPos.x = points[points.length-1].x;
+            startPos.y = points[points.length-1].y;
+            endPos.x = points[points.length-1].x;
+            endPos.y = points[points.length-1].y;
+
 
             var data = createRenderObject();
             renderPath(data);
@@ -386,6 +431,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
     $scope.endPolygon = function () {
         console.log('ending open polygon');
         polygonPoints = 0;
+        polygonPointIndex++;
+        $scope.midPolyDraw = false;
         sketchRenderer.renderAll();
         document.getElementById("endShape").style.display='none';
     };
