@@ -159,8 +159,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     }
 
                     var deleteAction = {
-                        "isAction":true,
-                        "type":"delete",
+                        "isAction": true,
+                        "type": "delete",
                         "actionItems": deletedItems
                     };
 
@@ -173,19 +173,23 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 
             // G
             case 71:
+                groups = sketchRenderer.getGroups();
                 console.log('Group');
+
                 var shapes = [];
                 for (var i in selection) {
                     shapes.push(selection[i]);
                 }
-                groups.push(shapes);
-                console.log('groups' + groups);
+
+                sketchRenderer.createGroup(shapes);
+
                 break;
 
             // U
             case 85:
                 console.log('Ungroup');
-                groups.splice(currentGroupIndex, 1);
+                sketchRenderer.removeGroup(currentGroupIndex);
+
                 break;
 
             // C
@@ -541,22 +545,14 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 
 	$scope.undo = function () {
         sketchRenderer.undo();
-        sketchRenderer.renderAll();
+        groups = sketchRenderer.getGroups();
         points = [];
-        //startPos.x = 0;
-        //startPos.y = 0;
-        //endPos.x = 0;
-        //endPos.y = 0;
     };
 
     $scope.redo = function () {
         sketchRenderer.redo();
+        groups = sketchRenderer.getGroups();
         sketchRenderer.renderAll();
-        //points = [];
-        //startPos.x = 0;
-        //startPos.y = 0;
-        //endPos.x = 0;
-        //endPos.y = 0;
     }
 
     $scope.endPolygon = function () {

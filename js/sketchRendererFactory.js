@@ -2,6 +2,8 @@ sketchApp.factory("sketchRenderer", function () {
 	"use strict";
 	var context;
     var	buffer = [];
+    var groups = [];
+    var currentGroupIndex = 0;
     var savedSketches = [];
     var clickMargin = 10;
     var undoStack = [];
@@ -248,35 +250,59 @@ sketchApp.factory("sketchRenderer", function () {
 			context = ctx;
 		},
 
+        getGroups: function() {
+            return groups
+        },
+
+        createGroup: function(shapes) {
+            groups.push(shapes);
+
+            var groupAction = {
+                "isAction": true,
+                "type": "group",
+                "actionItems": groups.length-1
+            };
+            
+            undoStack.push(groupAction);
+            renderAll();
+        },
+
+        removeGroup: function(index) {
+            var ungroupAction = {
+                "isAction": true,
+                "type": "ungroup",
+                "actionItems": groups[index]
+            };  
+
+            undoStack.push(ungroupAction);
+            groups.splice(index, 1);
+            renderAll();
+        },
+
 		undo: function () {
-            console.log('redo1: ' + JSON.stringify(redoStack));
             // var top = buffer.pop();
             if(undoStack.length > 0) {
                 var top = undoStack.pop();
-
                 if (top.isAction == true) {
-                    for (var i = 0; i < top.actionItems.length; i++) {
-                        if (top.type == 'delete') {
+
+                    if (top.type == 'delete' || top.type == 'move') {
+                        for (var i = 0; i < top.actionItems.length; i++) {
                             buffer.push(top.actionItems[i]);
                         }
-                        else if (top.type == 'group') {
-
-                        }
-                        else if (top.type == 'ungroup') {
-
-                        }
-                        else if (top.type == 'move') {
-
-                        }
-                        redoStack.push(top);
+                    } else if (top.type == 'group') {
+                        //remove the last item in groups
+                        //action items should be an int
+                        groups.splice(top.actionItems[0], 1);
+                    } else if (top.type == 'ungroup') {
+                        //take the item in the redoStack
+                        groups.push(top.actionItems);
                     }
-                }
-                else {
+                    console.log("undid a ", top.type," action.");
+                } else {
                     buffer.pop();
-                    redoStack.push(top);
                 }
-                console.log('redo2: ' + JSON.stringify(redoStack));
-                console.log('undo: ' + JSON.stringify(undoStack));
+
+                redoStack.push(top);
                 document.getElementById("redobutton").style.display = 'block';
             }
             renderAll();
@@ -285,27 +311,23 @@ sketchApp.factory("sketchRenderer", function () {
         redo: function () {
             var top = redoStack.pop();
             if(top.isAction == true){
-                for(var i=0; i< top.actionItems.length; i++){
-                    if(top.type == 'delete'){
-                        var indexDelete = buffer.indexOf(top.actionItems[i]);
-                        buffer.splice(indexDelete, 1);
+                
+                    if(top.type == 'delete' || top.type == 'move'){
+                        for(var i=0; i< top.actionItems.length; i++){
+                            var indexDelete = buffer.indexOf(top.actionItems[i]);
+                            buffer.splice(indexDelete, 1);
+                            undoStack.push(top);
+                        }
+                    } else if(top.type == 'group') {
+                        groups.push(top.actionItems);
+                    } else if(top.type == 'ungroup') {
+                        groups.splice(top.actionItems[0], 1);
                     }
-                    else if(top.type == 'group'){
-
-                    }
-                    else if(top.type == 'ungroup'){
-
-                    }
-                    else if(top.type == 'move'){
-
-                    }
-                    undoStack.push(top);
-                }
-            }
-            else{
+                    console.log("redid a ", top.type," action.");
+            } else {
                 buffer.push(top);
-                undoStack.push(top);
             }
+            undoStack.push(top);
             console.log('redo: ' + JSON.stringify(redoStack));
             if(redoStack.length==0) document.getElementById("redobutton").style.display='none';
             renderAll();
