@@ -222,12 +222,29 @@ sketchApp.factory("sketchRenderer", function () {
 		},
 
 		undo: function () {
-            undoneShapes.push(buffer.pop());
+            var top = buffer.pop();
+
+            if(top.isAction == true){
+                for(var i=0; i< top.actionItems.length; i++){
+                    //things for different actions
+                }
+            }
+            else{
+                undoneShapes.push(top);
+            }
             document.getElementById("redobutton").style.display='block';
 		},
 
         redo: function () {
-            buffer.push(undoneShapes.pop());
+            var top = undoneShapes.pop();
+            if(top.isAction == true){
+                for(var i=0; i< top.actionItems.length; i++){
+                    //things for different actions
+                }
+            }
+            else{
+                buffer.push(top);
+            }
             if(undoneShapes.length==0) document.getElementById("redobutton").style.display='none';
         },
 

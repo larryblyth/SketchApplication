@@ -119,6 +119,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 	$scope.fillColorCss = "black";
 	$scope.fillShape = false;
 	$scope.colorTarget = "line";
+    $scope.midPolyDraw = false;
 
 // functions
 	$scope.init = function () {
@@ -216,14 +217,19 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     var data = createRenderObject();
                     sketchRenderer.popBuffer();
                     sketchRenderer.addToBuffer(data);
+                    $scope.midPolyDraw = false;
+                    $scope.$apply();
                     polygonPoints = 0;
                     polygonPointIndex++;
                     renderPath(data);
 
                     document.getElementById("endShape").style.display='none';
                 } else if(polygonPoints==0) {
+
                     //this is start of polygon
                     document.getElementById("endShape").style.display='block';
+                    $scope.midPolyDraw = true;
+                    $scope.$apply();
 
                     //add a new entry in the array of entry arrays with starting point
                     polygonPointValues.push([{"pointX" : thisX,"pointY" : thisY}]);
@@ -348,6 +354,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
         console.log('ending open polygon');
         polygonPoints = 0;
         polygonPointIndex++;
+        $scope.midPolyDraw = false;
         sketchRenderer.renderAll();
         document.getElementById("endShape").style.display='none';
     };

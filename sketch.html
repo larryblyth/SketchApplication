@@ -17,16 +17,16 @@
 
     <div id="options">
         <div id="tools">
-          <span><input type="radio" name="tool" value="pencil" checked data-ng-model="tool"> Pencil</span>
-          <span><input type="radio" name="tool" value="line" data-ng-model="tool"> Line</span>
-          <span><input type="radio" name="tool" value="rectangle" data-ng-model="tool"> Rectangle</span>
-          <span><input type="radio" name="tool" value="square" data-ng-model="tool"> Square</span>
+          <span><input type="radio" name="tool" value="pencil" checked data-ng-model="tool" ng-disabled="midPolyDraw==true"> Pencil</span>
+          <span><input type="radio" name="tool" value="line" data-ng-model="tool" ng-disabled="midPolyDraw==true"> Line</span>
+          <span><input type="radio" name="tool" value="rectangle" data-ng-model="tool" ng-disabled="midPolyDraw==true"> Rectangle</span>
+          <span><input type="radio" name="tool" value="square" data-ng-model="tool" ng-disabled="midPolyDraw==true"> Square</span>
           <br>
-          <span><input type="radio" name="tool" value="circle" data-ng-model="tool"> Circle</span>
-          <span><input type="radio" name="tool" value="ellipse" data-ng-model="tool"> Ellipse</span>
-          <span><input type="radio" name="tool" value="polygon" data-ng-model="tool"> Polygon</span>
-            <div><button data-ng-click="undo()">Undo</button></div>
-          <div id="redobutton"><button data-ng-click="redo()">Redo</button></div>
+          <span><input type="radio" name="tool" value="circle" data-ng-model="tool" ng-disabled="midPolyDraw==true"> Circle</span>
+          <span><input type="radio" name="tool" value="ellipse" data-ng-model="tool" ng-disabled="midPolyDraw==true"> Ellipse</span>
+          <span><input type="radio" name="tool" value="polygon" data-ng-model="tool" > Polygon</span>
+            <div><button data-ng-click="undo()" ng-disabled="midPolyDraw==true">Undo</button></div>
+          <div id="redobutton"><button data-ng-click="redo()" ng-disabled="midPolyDraw==true">Redo</button></div>
           <div id="endShape"><button data-ng-click="endPolygon()">End shape</button></div>
         </div>
 
@@ -45,9 +45,9 @@
 
           <div id="colorTarget" data-ng-hide="isToolNameSelected('image')">
             <div title="Line color" data-ng-class="lineColorCss" data-ng-click="changeColorTarget('line')"></div>
-            <div id="saveSketch"><button data-ng-click="saveSketch()">Save</button></div>
-            <div id="loadSketch"><button data-ng-click="loadSketch()">Load</button></div>
-            <div id="newSketch"><button data-ng-click="newSketch()">New</button></div>
+            <div id="saveSketch"><button data-ng-click="saveSketch()" ng-disabled="midPolyDraw==true">Save</button></div>
+            <div id="loadSketch"><button data-ng-click="loadSketch()" ng-disabled="midPolyDraw==true">Load</button></div>
+            <div id="newSketch"><button data-ng-click="newSketch()" ng-disabled="midPolyDraw==true">New</button></div>
             <br>
             <span>Line</span>
           </div>
@@ -62,7 +62,7 @@
             Fill shape?
             <input type="checkbox" data-ng-model="fillShape">
           </div>
-          <div id="selectMode"><button data-ng-click="changeSelectMode()">Enter/Exit Selection Mode</button></div>
+          <div id="selectMode"><button data-ng-click="changeSelectMode()" ng-disabled="tool=='polygon'">Enter/Exit Selection Mode</button></div>
 
           <div id="imageOptions" data-ng-show="isToolNameSelected('image')">
             <input id="inpImage" type="file">
