@@ -35,9 +35,9 @@ sketchApp.factory("sketchRenderer", function () {
         context.lineCap = 'round';
 
         /*======= Drawing poly-based on polygonPointValues ============*/
-        for(var i=0; i<data.Values.length-1; i++ ) {
-            context.moveTo(data.Values[i].pointX, data.Values[i].pointY);
-            context.lineTo(data.Values[i+1].pointX, data.Values[i+1].pointY);
+        for(var i=0; i<data.Points.length-1; i++ ) {
+            context.moveTo(data.Points[i].x, data.Points[i].y);
+            context.lineTo(data.Points[i+1].x, data.Points[i+1].y);
             context.stroke();
         }
         /* =================Old Code Below==================== */
@@ -317,7 +317,6 @@ sketchApp.factory("sketchRenderer", function () {
                 switch (buffer[i].ToolName) {
                     case "pencil":
                         for(var j=0; j<buffer[i].Points.length; j++){
-                            console.log(buffer[i].Points[j]);
                             var objX = buffer[i].Points[j].x;
                             var objY = buffer[i].Points[j].y;
 
@@ -383,9 +382,9 @@ sketchApp.factory("sketchRenderer", function () {
                         }
                         break;
                     case "polygon":
-                        var points = buffer[i].Values;
+                        var points = buffer[i].numPoints;
                         for(var j = 0; j < points.length - 1; j++){
-                            found = CheckClickingLine(thisX,thisY,points[j].pointX, points[j+1].pointX, points[j].pointY, points[j+1].pointY);
+                            found = CheckClickingLine(thisX,thisY,points[j].x, points[j+1].x, points[j].y, points[j+1].y);
                             if(found){
                                 console.log('found ' + buffer[i].ToolName);
                                 found = false;

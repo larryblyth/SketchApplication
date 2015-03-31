@@ -103,8 +103,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     //StartY: startPos.y,
                     EndX: endPos.x,
                     EndY: endPos.y,
-                    Points: polygonPoints,
-                    Values: polygonPointValues[polygonPointIndex]
+                    numPoints: polygonPoints,
+                    Points: polygonPointValues[polygonPointIndex]
                 };
                 break;
             default:
@@ -305,7 +305,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     if( prevX - clickMargin < thisX && prevX + clickMargin > thisX   &&   prevY - clickMargin < thisY && prevY + clickMargin > thisY ) {
                         console.log('clicked on last point');
 
-                        polygonPointValues[polygonPointIndex].push({"pointX" : prevX,"pointY" : prevY});
+                        polygonPointValues[polygonPointIndex].push({"x" : prevX,"y" : prevY});
 
                         var data = createRenderObject();
                         sketchRenderer.popBuffer();
@@ -325,7 +325,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                         $scope.$apply();
 
                         //add a new entry in the array of entry arrays with starting point
-                        polygonPointValues.push([{"pointX" : thisX,"pointY" : thisY}]);
+                        polygonPointValues.push([{"x" : thisX,"y" : thisY}]);
 
                         mouseDownEvent(e);
                         polygonPoints++;
@@ -336,7 +336,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 
                     } else {
                         polygonPoints++;
-                        polygonPointValues[polygonPointIndex].push({"pointX" : thisX,"pointY" : thisY});
+                        polygonPointValues[polygonPointIndex].push({"x" : thisX,"y" : thisY});
 
                         //console.log("Values: "+ JSON.stringify(polygonPointValues));
                         //console.log("currentPolyArr: " + JSON.stringify(polygonPointValues[polygonPointIndex]));
