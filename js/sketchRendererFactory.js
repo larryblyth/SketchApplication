@@ -3,7 +3,7 @@ sketchApp.factory("sketchRenderer", function () {
 	var context;
     var	buffer = [];
     var savedSketches = [];
-    var clickMargin = 5;
+    var clickMargin = 10;
     var undoneShapes = [];
 
     var	renderPencil = function (data) {
@@ -316,7 +316,8 @@ sketchApp.factory("sketchRenderer", function () {
             for (var i = 0; i < buffer.length; i++) {
                 switch (buffer[i].ToolName) {
                     case "pencil":
-                        for(var j=0;j<buffer[i].Points.length;j++){
+                        for(var j=0; j<buffer[i].Points.length; j++){
+                            console.log(buffer[i].Points[j]);
                             var objX = buffer[i].Points[j].x;
                             var objY = buffer[i].Points[j].y;
 
@@ -383,9 +384,10 @@ sketchApp.factory("sketchRenderer", function () {
                         break;
                     case "polygon":
                         var points = buffer[i].Values;
-                        for(i=0; i<points.length-1; i++){
-                            found = CheckClickingLine(thisX,thisY,points[i].pointX, points[i+1].pointX, points[i].pointY, points[i+1].pointY);
+                        for(var j = 0; j < points.length - 1; j++){
+                            found = CheckClickingLine(thisX,thisY,points[j].pointX, points[j+1].pointX, points[j].pointY, points[j+1].pointY);
                             if(found){
+                                console.log('found ' + buffer[i].ToolName);
                                 found = false;
                                 return buffer[i];
                             }
