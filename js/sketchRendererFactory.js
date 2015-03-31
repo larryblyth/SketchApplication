@@ -4,7 +4,8 @@ sketchApp.factory("sketchRenderer", function () {
     var	buffer = [];
     var savedSketches = [];
     var clickMargin = 10;
-    var undoneShapes = [];
+    var undoStack = [];
+    var redoStack = [];
 
     var	renderPencil = function (data) {
 		context.beginPath();
@@ -16,7 +17,7 @@ sketchApp.factory("sketchRenderer", function () {
 			context.lineTo(data.Points[i].x, data.Points[i].y);
 		}
 		context.stroke();
-	};
+	}
 
     var	renderLine = function (data) {
 		context.beginPath();
@@ -194,10 +195,16 @@ sketchApp.factory("sketchRenderer", function () {
 	return {
 		addToBuffer: function (data) {
 			buffer.push(data);
+            undoStack.push(data);
 		},
+
+        addAction: function(action) {
+            undoStack.push(action);
+        }
 
         popBuffer: function() {
             buffer.pop();
+            undoStack.pop();
         },
 
         removeObjects: function(selection) {
@@ -242,7 +249,8 @@ sketchApp.factory("sketchRenderer", function () {
 		},
 
 		undo: function () {
-            var top = buffer.pop();
+            // var top = buffer.pop();
+            var top = undoStack.pop();
 
             if(top.isAction == true){
                 for(var i=0; i< top.actionItems.length; i++){
@@ -265,13 +273,13 @@ sketchApp.factory("sketchRenderer", function () {
                 }
             }
             else{
-                undoneShapes.push(top);
+                redoStack.push(top);
             }
             document.getElementById("redobutton").style.display='block';
 		},
 
         redo: function () {
-            var top = undoneShapes.pop();
+            var top = redoStack.pop();
             if(top.isAction == true){
                 for(var i=0; i< top.actionItems.length; i++){
                     if(top.type == 'delete'){
@@ -292,10 +300,10 @@ sketchApp.factory("sketchRenderer", function () {
                 }
             }
             else{
-                buffer.push(top);
+                redoStack.push(top);
             }
 
-            if(undoneShapes.length==0) document.getElementById("redobutton").style.display='none';
+            if(redoStack.length==0) document.getElementById("redobutton").style.display='none';
         },
 
         save: function (sketchName) {
