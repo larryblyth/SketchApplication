@@ -227,7 +227,6 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 
                     //add a new entry in the array of entry arrays with starting point
                     polygonPointValues.push([{"pointX" : thisX,"pointY" : thisY}]);
-                    console.log("Values: "+ JSON.stringify(polygonPointValues));
 
                     mouseDownEvent(e);
                     polygonPoints++;
@@ -240,8 +239,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     polygonPoints++;
                     polygonPointValues[polygonPointIndex].push({"pointX" : thisX,"pointY" : thisY});
 
-                    console.log("Values: "+ JSON.stringify(polygonPointValues));
-                    console.log("currentPolyArr: " + JSON.stringify(polygonPointValues[polygonPointIndex]));
+                    //console.log("Values: "+ JSON.stringify(polygonPointValues));
+                    //console.log("currentPolyArr: " + JSON.stringify(polygonPointValues[polygonPointIndex]));
 
 
                     console.log('doing polygon stuff');

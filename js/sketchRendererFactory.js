@@ -348,7 +348,15 @@ sketchApp.factory("sketchRenderer", function () {
                         }
                         break;
                     case "polygon":
-                        //To-Do
+                        var points = buffer[i].Values;
+                        for(i=0; i<points.length-1; i++){
+                            found = CheckClickingLine(thisX,thisY,points[i].pointX, points[i+1].pointX, points[i].pointY, points[i+1].pointY);
+                            if(found){
+                                found = false;
+                                return buffer[i];
+                            }
+                        }
+
                         break;
                     default:
                         console.log("findSelection: unknown tool: "+buffer[i].tool);
