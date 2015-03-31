@@ -231,6 +231,25 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 
         document.getElementById("endShape").style.display='none';
         document.getElementById("redobutton").style.display='none';
+
+        canvas.ondblclick = function(e){
+            //doubling clicking while drawing a polyon has the same effect as closing it
+
+            if($scope.midPolyDraw == true){
+                polygonPointValues[polygonPointIndex].push({"x" : prevX,"y" : prevY});
+
+                var data = createRenderObject();
+                sketchRenderer.popBuffer();
+                sketchRenderer.addToBuffer(data);
+                $scope.midPolyDraw = false;
+                $scope.$apply();
+                polygonPoints = 0;
+                polygonPointIndex++;
+                renderPath(data);
+
+                document.getElementById("endShape").style.display='none';
+            }
+        }
 		
 		canvas.onmousedown = function (e) {
             if (selectMode) {
