@@ -183,6 +183,9 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 				endPos.x = lastPoint.x;
 				endPos.y = lastPoint.y;
 
+                console.log("lastPoint: " + JSON.stringify(lastPoint));
+
+
                 //if tool is polygon, need to switch to line for createRenderObject for proper "ghosting" effect
                 //polygons render differently than lines so without this it wouldn't happen
                 if($scope.tool == 'polygon'){
@@ -278,18 +281,14 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 color: colorValue[lineColorNumber]
             });
 
+            console.log("push in DOWN: " + (e.pageX - canvas.offsetLeft) - offset + " " + (e.pageY - canvas.offsetTop) - offset);
+
             //mouseDown = true;
-            if($scope.tool == 'polygon' && points.length>0) {
-                startPos.x = points[points.length-1].x;
-                startPos.y = points[points.length-1].y;
-                endPos.x = points[points.length-1].x;
-                endPos.y = points[points.length-1].y;
-            } else {
-                startPos.x = points[0].x;
-                startPos.y = points[0].y;
-                endPos.x = points[0].x;
-                endPos.y = points[0].y;
-            }
+            startPos.x = points[points.length-1].x;
+            startPos.y = points[points.length-1].y;
+            endPos.x = points[points.length-1].x;
+            endPos.y = points[points.length-1].y;
+
 
             var data = createRenderObject();
             renderPath(data);
