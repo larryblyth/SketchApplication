@@ -62,7 +62,7 @@
             Fill shape?
             <input type="checkbox" data-ng-model="fillShape">
           </div>
-          <div id="selectMode"><button data-ng-click="changeSelectMode()" ng-disabled="tool=='polygon'">Enter/Exit Selection Mode</button></div>
+          <div id="selectMode"><button data-ng-click="changeSelectMode()" ng-disabled="midPolyDraw==true">Enter/Exit Selection Mode</button></div>
 
           <div id="imageOptions" data-ng-show="isToolNameSelected('image')">
             <input id="inpImage" type="file">

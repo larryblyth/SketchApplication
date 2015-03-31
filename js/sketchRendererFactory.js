@@ -247,7 +247,22 @@ sketchApp.factory("sketchRenderer", function () {
 
             if(top.isAction == true){
                 for(var i=0; i< top.actionItems.length; i++){
-                    //things for different actions
+                    if(top.type == 'delete'){
+
+                    }
+                    else if(top.type == 'paste'){
+
+                    }
+                    else if(top.type == 'group'){
+
+                    }
+                    else if(top.type == 'ungroup'){
+
+                    }
+                    else if(top.type == 'move'){
+
+                    }
+
                 }
             }
             else{
@@ -260,12 +275,27 @@ sketchApp.factory("sketchRenderer", function () {
             var top = undoneShapes.pop();
             if(top.isAction == true){
                 for(var i=0; i< top.actionItems.length; i++){
-                    //things for different actions
+                    if(top.type == 'delete'){
+
+                    }
+                    else if(top.type == 'paste'){
+
+                    }
+                    else if(top.type == 'group'){
+
+                    }
+                    else if(top.type == 'ungroup'){
+
+                    }
+                    else if(top.type == 'move'){
+
+                    }
                 }
             }
             else{
                 buffer.push(top);
             }
+
             if(undoneShapes.length==0) document.getElementById("redobutton").style.display='none';
         },
 

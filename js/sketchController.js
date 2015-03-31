@@ -150,6 +150,23 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
             case 46:
             case 68:
                 console.log('Remove');
+                if(selection.length > 0) {
+                    var deletedItems = [];
+
+                    console.log(JSON.stringify(selection));
+
+                    for (var i=0; i<selection.length; i++) {
+                        deletedItems.push(selection[i]);
+                    }
+
+                    var deleteAction = {
+                        "isAction":true,
+                        "type":"delete",
+                        "actionItems": deletedItems
+                    };
+
+                    sketchRenderer.addToBuffer(deleteAction);
+                }
                 sketchRenderer.removeObjects(selection);
                 sketchRenderer.renderAll();
                 selection.length = 0;
