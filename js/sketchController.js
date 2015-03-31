@@ -11,6 +11,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
     var polygonPointIndex = 0;
     var clipBoard = [];
     var PASTE_OFFSET = 20;
+    var firstX, firstY;
 
     var renderPath = function (data) {
         if ($scope.tool === "rectangle" || $scope.tool === "line" || $scope.tool === "circle" || $scope.tool === "square" || $scope.tool === "ellipse" || $scope.tool === "polygon") {
@@ -280,6 +281,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 mouseDown = true;
                 lastX = thisX;
                 lastY = thisY;
+                firstX = thisX;
+                firstY = thisY;
             } else if($scope.tool != 'polygon') {
                 mouseDownEvent(e);
                 mouseDown = true;
@@ -360,7 +363,19 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 
             if (selectMode) {
                 if (mouseDrag & selection.length > 0) {
-                    
+                    var shapes = [];
+                    for (var i in selection) {
+                        shapes.push(selection[i]);
+                    }
+
+                    var moveAction = {
+                        "isAction":true,
+                        "type":"move",
+                        'dx' : firstX - thisX,
+                        'dy' : firstY - thisY,
+                        "actionItems": shapes
+                    };
+                    sketchRenderer.addAction(moveAction);
                 } else {
                     var shape = sketchRenderer.findSelection(thisX,thisY);
                     if (shape && shape != 'none') {

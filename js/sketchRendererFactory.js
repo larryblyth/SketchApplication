@@ -284,10 +284,30 @@ sketchApp.factory("sketchRenderer", function () {
             if(undoStack.length > 0) {
                 var top = undoStack.pop();
                 if (top.isAction == true) {
-
-                    if (top.type == 'delete' || top.type == 'move') {
+                    if (top.type == 'delete') {
                         for (var i = 0; i < top.actionItems.length; i++) {
                             buffer.push(top.actionItems[i]);
+                        }
+                    } else if(top.type == 'move') {
+                        for (var i = 0; i < top.actionItems.length; i++) {
+                            var shape = top.actionItems[i];
+                            var dx = top.dx;
+                            var dy = top.dy;
+                            if (shape.Points) {
+                                for (var j in shape.Points) {
+                                    shape.Points[j].x = shape.Points[j].x + dx;
+                                    shape.Points[j].y = shape.Points[j].y + dy;
+                                }
+                            }
+                            if (shape.EndX) {
+                                shape.EndX = shape.EndX + dx;
+                                shape.EndY = shape.EndY + dy;
+                            }
+                            if (shape.StartX) {
+                                shape.StartX = shape.StartX + dx;
+                                shape.StartY = shape.StartY + dy;
+                            }
+
                         }
                     } else if (top.type == 'group') {
                         //remove the last item in groups
@@ -311,12 +331,30 @@ sketchApp.factory("sketchRenderer", function () {
         redo: function () {
             var top = redoStack.pop();
             if(top.isAction == true){
-                
-                    if(top.type == 'delete' || top.type == 'move'){
+                    if(top.type == 'delete'){
                         for(var i=0; i< top.actionItems.length; i++){
                             var indexDelete = buffer.indexOf(top.actionItems[i]);
                             buffer.splice(indexDelete, 1);
-                            undoStack.push(top);
+                        }
+                    } else if(top.type == 'move'){
+                        for(var i=0; i< top.actionItems.length; i++){
+                            var shape = top.actionItems[i];
+                            var dx = top.dx;
+                            var dy = top.dy;
+                            if (shape.Points) {
+                                for (var j in shape.Points) {
+                                    shape.Points[j].x = shape.Points[j].x - dx;
+                                    shape.Points[j].y = shape.Points[j].y - dy;
+                                }
+                            }
+                            if (shape.EndX) {
+                                shape.EndX = shape.EndX - dx;
+                                shape.EndY = shape.EndY - dy;
+                            }
+                            if (shape.StartX) {
+                                shape.StartX = shape.StartX - dx;
+                                shape.StartY = shape.StartY - dy;
+                            }                        
                         }
                     } else if(top.type == 'group') {
                         groups.push(top.actionItems);
@@ -335,20 +373,10 @@ sketchApp.factory("sketchRenderer", function () {
 
         save: function (sketchName) {
             save(sketchName);
-            //if (confirm('Would you like to start a new sketch?')) {
-            //    console.log('starting new sketch');
-            //    buffer = [];
-            //    renderAll();
-            //} else {
-            //    console.log('continuing same sketch');
-            //}
         },
 
         load: function () {
             console.log('loading sketch');
-            //if (confirm('Would you like to save the current sketch?')) {
-            //    save();
-            //}
 
             var sketchName ="";
             sketchName = prompt('please enter the name of the sketch you would like to load');
