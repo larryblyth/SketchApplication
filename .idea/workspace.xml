@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3aa949c0-d95d-4c51-9752-adaa991ec397" name="Default" comment="" />
+    <list default="true" id="3aa949c0-d95d-4c51-9752-adaa991ec397" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/sketchRendererFactory.js" afterPath="$PROJECT_DIR$/js/sketchRendererFactory.js" />
+    </list>
     <ignored path="Sketch.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -34,21 +36,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sketchController.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="sketchController.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/sketchController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2346" max-vertical-offset="10234">
-              <caret line="172" column="37" selection-start-line="172" selection-start-column="37" selection-end-line="172" selection-end-column="37" />
+            <state vertical-scroll-proportion="0.8333333" vertical-offset="3315" max-vertical-offset="10234">
+              <caret line="225" column="66" selection-start-line="225" selection-start-column="66" selection-end-line="225" selection-end-column="66" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sketchRendererFactory.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sketchRendererFactory.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/sketchRendererFactory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.942953" vertical-offset="4368" max-vertical-offset="7769">
-              <caret line="290" column="17" selection-start-line="290" selection-start-column="17" selection-end-line="290" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="4577" max-vertical-offset="7837">
+              <caret line="282" column="0" selection-start-line="282" selection-start-column="0" selection-end-line="282" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -63,8 +65,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/sketch.html" />
-        <option value="$PROJECT_DIR$/js/sketchController.js" />
         <option value="$PROJECT_DIR$/js/sketchRendererFactory.js" />
+        <option value="$PROJECT_DIR$/js/sketchController.js" />
       </list>
     </option>
   </component>
@@ -374,18 +376,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/sketchController.js">
+    <entry file="file://$PROJECT_DIR$/js/sketchRendererFactory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2346" max-vertical-offset="10234">
-          <caret line="172" column="37" selection-start-line="172" selection-start-column="37" selection-end-line="172" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="4577" max-vertical-offset="7837">
+          <caret line="282" column="0" selection-start-line="282" selection-start-column="0" selection-end-line="282" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/sketchRendererFactory.js">
+    <entry file="file://$PROJECT_DIR$/js/sketchController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.942953" vertical-offset="4368" max-vertical-offset="7769">
-          <caret line="290" column="17" selection-start-line="290" selection-start-column="17" selection-end-line="290" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.8333333" vertical-offset="3315" max-vertical-offset="10234">
+          <caret line="225" column="66" selection-start-line="225" selection-start-column="66" selection-end-line="225" selection-end-column="66" />
           <folding />
         </state>
       </provider>

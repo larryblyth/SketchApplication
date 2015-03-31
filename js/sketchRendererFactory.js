@@ -247,7 +247,7 @@ sketchApp.factory("sketchRenderer", function () {
             if(top.isAction == true){
                 for(var i=0; i< top.actionItems.length; i++){
                     if(top.type == 'delete'){
-
+                        buffer.push(top.actionItems[i]);
                     }
                     else if(top.type == 'paste'){
 
@@ -261,13 +261,14 @@ sketchApp.factory("sketchRenderer", function () {
                     else if(top.type == 'move'){
 
                     }
-
+                    undoneShapes.push(top);
                 }
             }
             else{
                 undoneShapes.push(top);
             }
             document.getElementById("redobutton").style.display='block';
+            renderAll();
 		},
 
         redo: function () {
@@ -275,7 +276,8 @@ sketchApp.factory("sketchRenderer", function () {
             if(top.isAction == true){
                 for(var i=0; i< top.actionItems.length; i++){
                     if(top.type == 'delete'){
-
+                        var indexDelete = buffer.indexOf(top.actionItems[i]);
+                        buffer.splice(indexDelete, 1);
                     }
                     else if(top.type == 'paste'){
 
@@ -289,6 +291,8 @@ sketchApp.factory("sketchRenderer", function () {
                     else if(top.type == 'move'){
 
                     }
+
+                    buffer.push(top);
                 }
             }
             else{
