@@ -154,8 +154,6 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 if(selection.length > 0) {
                     var deletedItems = [];
 
-                    console.log(JSON.stringify(selection));
-
                     for (var i=0; i<selection.length; i++) {
                         deletedItems.push(selection[i]);
                     }

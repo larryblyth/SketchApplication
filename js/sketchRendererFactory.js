@@ -269,7 +269,7 @@ sketchApp.factory("sketchRenderer", function () {
                     else if(top.type == 'move'){
 
                     }
-                    undoneShapes.push(top);
+                    redoStack.push(top);
                 }
             }
             else{
