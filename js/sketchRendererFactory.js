@@ -249,6 +249,7 @@ sketchApp.factory("sketchRenderer", function () {
 		},
 
 		undo: function () {
+            console.log('redo1: ' + JSON.stringify(redoStack));
             // var top = buffer.pop();
             if(undoStack.length > 0) {
                 var top = undoStack.pop();
@@ -257,9 +258,6 @@ sketchApp.factory("sketchRenderer", function () {
                     for (var i = 0; i < top.actionItems.length; i++) {
                         if (top.type == 'delete') {
                             buffer.push(top.actionItems[i]);
-                        }
-                        else if (top.type == 'paste') {
-
                         }
                         else if (top.type == 'group') {
 
@@ -277,6 +275,7 @@ sketchApp.factory("sketchRenderer", function () {
                     buffer.pop();
                     redoStack.push(top);
                 }
+                console.log('redo2: ' + JSON.stringify(redoStack));
                 console.log('undo: ' + JSON.stringify(undoStack));
                 document.getElementById("redobutton").style.display = 'block';
             }
@@ -290,9 +289,6 @@ sketchApp.factory("sketchRenderer", function () {
                     if(top.type == 'delete'){
                         var indexDelete = buffer.indexOf(top.actionItems[i]);
                         buffer.splice(indexDelete, 1);
-                    }
-                    else if(top.type == 'paste'){
-
                     }
                     else if(top.type == 'group'){
 

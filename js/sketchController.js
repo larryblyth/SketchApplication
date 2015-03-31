@@ -197,7 +197,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     clipBoard = JSON.parse(JSON.stringify(selection));
                 }
                 break;
-            //
+            // V
             case 86:
                 console.log('paste');
 
@@ -221,6 +221,9 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     selection.push(clipBoard[i]);
                     sketchRenderer.addToBuffer(clipBoard[i]);
                 }
+
+                console.log('pasteSelection: ' + JSON.stringify(selection));
+
                 clipBoard = JSON.parse(JSON.stringify(selection));
                 sketchRenderer.renderAll();
                 break;
