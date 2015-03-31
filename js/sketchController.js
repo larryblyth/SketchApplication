@@ -3,8 +3,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 	'use strict';
 	var colors,colorValue,canvas,context,points,lineColorNumber,fillColorNumber,mouseDown,startPos,endPos,createRenderObject,renderPath,backgroundImage, ResetCanvasRatio, prevX = 0, prevY = 0, thisX = 0, thisY = 0, selectMode, selection= 'none';
     var polygonPoints = 0;
-    //var polygonPointValues = [];
-    //var polygonPointIndex = 0;
+    var polygonPointValues = [];
+    var polygonPointIndex = 0;
     var renderPath = function (data) {
         if ($scope.tool === "rectangle" || $scope.tool === "line" || $scope.tool === "circle" || $scope.tool === "square" || $scope.tool === "ellipse" || $scope.tool === "polygon") {
             sketchRenderer.renderAll();
@@ -89,12 +89,12 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     ToolName: "polygon",
                     LineColor: colorValue[lineColorNumber],
                     LineWidth: $scope.lineWidth,
-                    StartX: startPos.x,
-                    StartY: startPos.y,
+                    //StartX: startPos.x,
+                    //StartY: startPos.y,
                     EndX: endPos.x,
                     EndY: endPos.y,
-                    Points: polygonPoints
-
+                    Points: polygonPoints,
+                    Values: polygonPointValues[polygonPointIndex]
                 };
                 break;
             default:
@@ -182,7 +182,16 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 				endPos.x = lastPoint.x;
 				endPos.y = lastPoint.y;
 
-				data = createRenderObject();
+                //if tool is polygon, need to switch to line for createRenderObject for proper "ghosting" effect
+                //polygons render differently than lines so without this it wouldn't happen
+                if($scope.tool == 'polygon'){
+                    $scope.tool = 'line';
+                    data = createRenderObject();
+                    $scope.tool = 'polygon';
+                }
+                else{
+                    data = createRenderObject();
+                }
 				renderPath(data);				
 			}			
 		};
@@ -196,16 +205,29 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
             if($scope.tool == 'polygon') {
                 thisX = (e.pageX - canvas.offsetLeft) - offset;
                 thisY = (e.pageY - canvas.offsetTop) - offset;
-                var clickMargin = 5;
+
+
+                var clickMargin = 7;
                 if( prevX - clickMargin < thisX && prevX + clickMargin > thisX   &&   prevY - clickMargin < thisY && prevY + clickMargin > thisY ) {
                     console.log('clicked on last point');
+
+                    polygonPointValues[polygonPointIndex].push({"pointX" : prevX,"pointY" : prevY});
+
                     var data = createRenderObject();
+                    sketchRenderer.popBuffer();
                     sketchRenderer.addToBuffer(data);
                     polygonPoints = 0;
+                    polygonPointIndex++;
+                    renderPath(data);
+
                     document.getElementById("endShape").style.display='none';
                 } else if(polygonPoints==0) {
                     //this is start of polygon
                     document.getElementById("endShape").style.display='block';
+
+                    //add a new entry in the array of entry arrays with starting point
+                    polygonPointValues.push([{"pointX" : thisX,"pointY" : thisY}]);
+                    console.log("Values: "+ JSON.stringify(polygonPointValues));
 
                     mouseDownEvent(e);
                     polygonPoints++;
@@ -216,8 +238,18 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 
                 } else {
                     polygonPoints++;
+                    polygonPointValues[polygonPointIndex].push({"pointX" : thisX,"pointY" : thisY});
+
+                    console.log("Values: "+ JSON.stringify(polygonPointValues));
+                    console.log("currentPolyArr: " + JSON.stringify(polygonPointValues[polygonPointIndex]));
+
+
                     console.log('doing polygon stuff');
                     var data = createRenderObject();
+                    //remove last version of polygon before rea-dding it with new data
+                    if(polygonPoints != 2) {
+                        sketchRenderer.popBuffer();
+                    }
                     sketchRenderer.addToBuffer(data);
                     mouseDownEvent(e);
                 }
@@ -316,6 +348,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
     $scope.endPolygon = function () {
         console.log('ending open polygon');
         polygonPoints = 0;
+        polygonPointIndex++;
         sketchRenderer.renderAll();
         document.getElementById("endShape").style.display='none';
     };

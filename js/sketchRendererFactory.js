@@ -33,9 +33,18 @@ sketchApp.factory("sketchRenderer", function () {
         context.strokeStyle = data.LineColor;
         context.lineWidth = data.LineWidth;
         context.lineCap = 'round';
-        context.moveTo(data.StartX, data.StartY);
-        context.lineTo(data.EndX, data.EndY);
-        context.stroke();
+
+        /*======= Drawing poly-based on polygonPointValues ============*/
+        for(var i=0; i<data.Values.length-1; i++ ) {
+            context.moveTo(data.Values[i].pointX, data.Values[i].pointY);
+            context.lineTo(data.Values[i+1].pointX, data.Values[i+1].pointY);
+            context.stroke();
+        }
+        /* =================Old Code Below==================== */
+
+        //context.moveTo(data.StartX, data.StartY);
+        //context.lineTo(data.EndX, data.EndY);
+        //context.stroke();
     };
 
 
@@ -173,6 +182,10 @@ sketchApp.factory("sketchRenderer", function () {
 		addToBuffer: function (data) {
 			buffer.push(data);
 		},
+
+        popBuffer: function() {
+            buffer.pop();
+        },
 
 		renderAll: function () {
 			renderAll();
