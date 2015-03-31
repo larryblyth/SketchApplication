@@ -200,7 +200,7 @@ sketchApp.factory("sketchRenderer", function () {
 
         addAction: function(action) {
             undoStack.push(action);
-        }
+        },
 
         popBuffer: function() {
             buffer.pop();
