@@ -1,8 +1,11 @@
 var sketchApp = angular.module("sketchApp", []);
 sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 	'use strict';
-	var colors,colorValue,canvas,context,points,lineColorNumber,fillColorNumber,mouseDown,startPos,endPos,createRenderObject,renderPath,backgroundImage, ResetCanvasRatio, prevX = 0, prevY = 0, thisX = 0, thisY = 0, selectMode, selection= 'none';
+	var colors,colorValue,canvas,context,points,lineColorNumber,fillColorNumber,mouseDown,startPos,endPos,createRenderObject,renderPath,backgroundImage, ResetCanvasRatio, prevX = 0, prevY = 0, thisX = 0, thisY = 0, selectMode, selection=[];
     var polygonPoints = 0;
+    var groups = [];
+    var lastX, lastY;
+    var mouseDrag = false;
     var renderPath = function (data) {
         if ($scope.tool === "rectangle" || $scope.tool === "line" || $scope.tool === "circle" || $scope.tool === "square" || $scope.tool === "ellipse" || $scope.tool === "polygon") {
             sketchRenderer.renderAll();
@@ -19,7 +22,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     ToolName: "pencil",
                     LineWidth: $scope.lineWidth,
                     Points: points,
-                    Color: colorValue[lineColorNumber]
+                    LineColor: colorValue[lineColorNumber]
                 };
                 break;
             case "line":
@@ -59,14 +62,20 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 };
                 break;
             case "ellipse":
+                var width = endPos.x - startPos.x;
+                var height = endPos.y - startPos.y;
                 data = {
                     ToolName: "ellipse",
                     LineColor: colorValue[lineColorNumber],
                     FillColor: colorValue[fillColorNumber],
                     LineWidth: $scope.lineWidth,
-                    StartX: startPos.x,
-                    StartY: startPos.y,
-                    Radius: (Math.abs(endPos.x - startPos.x) + (Math.abs(endPos.y - startPos.y)) / 2),
+                    StartX: startPos.x + width / 2,
+                    StartY: startPos.y + height / 2,
+                    RadiusX: Math.abs(width / 2),
+                    RadiusY: Math.abs(height/ 2),
+                    // EndX: endPos.x,
+                    // EndY: endPos.y,
+                    // Radius: (Math.abs(endPos.x - startPos.x) + (Math.abs(endPos.y - startPos.y)) / 2),
                     FillShape: $scope.fillShape
                 };
                 break;
@@ -99,6 +108,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 data = {};
                 break;
         }
+        data.originalColor = data.LineColor;
         return data;
     };
 
@@ -116,6 +126,37 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 	$scope.fillColorCss = "black";
 	$scope.fillShape = false;
 	$scope.colorTarget = "line";
+
+// Keyboard presses
+    $('body').on('keydown', function(event) {
+        var key = event.keyCode || event.charCode;
+        console.log('keyboard ' + key);
+        switch (key) {
+            // S
+            case 83:
+                console.log('S');
+                selectMode = !selectMode;
+                mouseDown = false;
+                break;
+
+            // Backspace, delete, 'd'
+            case 8:
+            case 46:
+            case 68:
+                console.log('Remove');
+                sketchRenderer.removeObjects(selection);
+                sketchRenderer.renderAll();
+                selection.length = 0;
+                break;
+
+            // G
+            case 71:
+                console.log('Group');
+                groups.push(selection);
+                console.log(groups);
+                break;
+        }
+    })
 
 // functions
 	$scope.init = function () {
@@ -138,21 +179,12 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
         document.getElementById("redobutton").style.display='none';
 		
 		canvas.onmousedown = function (e) {
-            if(selectMode) {
-                var thisX = (e.pageX - canvas.offsetLeft) - offset;
-                var thisY = (e.pageY - canvas.offsetTop) - offset;
-                selection = sketchRenderer.findSelection(thisX,thisY);
-                if(selection == 'none') {
-                    console.log('nothing selected');
-                } else {
-                    console.log('selected something!');
-                    //console.log(selection);
-                    //selection contains data object for what was just selected
-
-                    //TO-DO
-
-
-                }
+            if (selectMode) {
+                thisX = (e.pageX - canvas.offsetLeft) - offset;
+                thisY = (e.pageY - canvas.offsetTop) - offset;
+                mouseDown = true;
+                lastX = thisX;
+                lastY = thisY;
             } else if($scope.tool != 'polygon') {
                 mouseDownEvent(e);
                 mouseDown = true;
@@ -160,15 +192,25 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 		};
 
 		canvas.onmousemove = function (e) {
+            x = (e.pageX - canvas.offsetLeft) - offset;
+            y = (e.pageY - canvas.offsetTop) - offset;
+            // console.log('x: ' + x + ' y: ' + y );
 
-            if(selectMode) return;
+            if(mouseDown && selectMode) {
+                for (var i in selection) {
+                    var shape = selection[i];
+                    // console.log('shape: ' + shape)
+                    shape.StartX = shape.StartX + x - lastX;
+                    shape.StartY = shape.StartY + y - lastY;
+                    renderPath(shape);
+                }
+                lastX = x;
+                lastY = y;
+                mouseDrag = true;
+            }
 
 			var x, y, lastPoint, data;
-			if ( ( mouseDown && $scope.tool != 'polygon' ) || ( $scope.tool == 'polygon' && polygonPoints>0)) { //if mouse is up in polygon mode, then drag
-				x = (e.pageX - canvas.offsetLeft) - offset;
-				y = (e.pageY - canvas.offsetTop) - offset;
-                //console.log('x: '+x+' y: '+y);
-
+			if (!selectMode && ((mouseDown && $scope.tool != 'polygon' ) || ( $scope.tool == 'polygon' && polygonPoints>0))) { //if mouse is up in polygon mode, then drag
 				points.push({
 					x: x,
 					y: y,
@@ -185,46 +227,82 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 		};
 
 		canvas.onmouseup = function (e) {
-            if(selectMode) return;
+            var thisX = (e.pageX - canvas.offsetLeft) - offset;
+            var thisY = (e.pageY - canvas.offsetTop) - offset;
 
-            if($scope.tool == 'polygon') {
-                thisX = (e.pageX - canvas.offsetLeft) - offset;
-                thisY = (e.pageY - canvas.offsetTop) - offset;
-                var clickMargin = 5;
-                if( prevX - clickMargin < thisX && prevX + clickMargin > thisX   &&   prevY - clickMargin < thisY && prevY + clickMargin > thisY ) {
-                    console.log('clicked on last point');
-                    var data = createRenderObject();
-                    sketchRenderer.addToBuffer(data);
-                    polygonPoints = 0;
-                    document.getElementById("endShape").style.display='none';
-                } else if(polygonPoints==0) {
-                    //this is start of polygon
-                    document.getElementById("endShape").style.display='block';
-                    mouseDownEvent(e);
-                    polygonPoints++;
-                    //store this point so can detect if they click on it later
-                    prevX = thisX;
-                    prevY = thisY;
-
+            if (selectMode) {
+                if (mouseDrag & selection.length > 0) {
+                    
                 } else {
-                    polygonPoints++;
-                    console.log('doing polygon stuff');
+                    var shape = sketchRenderer.findSelection(thisX,thisY);
+                    if (shape != 'none') {
+                        console.log('selected something!');
+                        if (shape.isSelected) {
+                            // Unselect
+                            unselect([shape]);
+                            selection.splice(selection.indexOf(shape), 1);
+                        } else {
+                            // Select
+                            shape.LineColor = colorValue[4];
+                            shape.isSelected = true;
+                            selection.push(shape);
+                        }
+                        renderPath(shape);
+                    } else {
+                        unselect(selection);
+                        selection.length = 0;
+                    }
+                }
+                mouseDrag = false;
+                mouseDown = false;
+            } else {
+                if($scope.tool == 'polygon') {
+                    thisX = (e.pageX - canvas.offsetLeft) - offset;
+                    thisY = (e.pageY - canvas.offsetTop) - offset;
+                    var clickMargin = 5;
+                    if( prevX - clickMargin < thisX && prevX + clickMargin > thisX   &&   prevY - clickMargin < thisY && prevY + clickMargin > thisY ) {
+                        console.log('clicked on last point');
+                        var data = createRenderObject();
+                        sketchRenderer.addToBuffer(data);
+                        polygonPoints = 0;
+                        document.getElementById("endShape").style.display='none';
+                    } else if(polygonPoints==0) {
+                        //this is start of polygon
+                        document.getElementById("endShape").style.display='block';
+                        mouseDownEvent(e);
+                        polygonPoints++;
+                        //store this point so can detect if they click on it later
+                        prevX = thisX;
+                        prevY = thisY;
+
+                    } else {
+                        polygonPoints++;
+                        console.log('doing polygon stuff');
+                        var data = createRenderObject();
+                        sketchRenderer.addToBuffer(data);
+                        mouseDownEvent(e);
+                    }
+                } else {
+                    mouseDown = false;
                     var data = createRenderObject();
                     sketchRenderer.addToBuffer(data);
-                    mouseDownEvent(e);
-                }
-            } else {
-                mouseDown = false;
-                var data = createRenderObject();
-                sketchRenderer.addToBuffer(data);
 
-                points = [];
-                startPos.x = 0;
-                startPos.y = 0;
-                endPos.x = 0;
-                endPos.y = 0;
+                    points = [];
+                    startPos.x = 0;
+                    startPos.y = 0;
+                    endPos.x = 0;
+                    endPos.y = 0;
+                }
             }
 		};
+
+        var unselect = function(shapes) {
+            for (var i in shapes) {
+                shapes[i].LineColor = shapes[i].originalColor;
+                shapes[i].isSelected = false;
+                renderPath(shapes[i]);
+            }
+        };
 
         var mouseDownEvent = function(e) {
             points.push({
