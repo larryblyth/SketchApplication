@@ -188,7 +188,6 @@ sketchApp.factory("sketchRenderer", function () {
     var checkEllipse = function(thisX, thisY, centerX, centerY, radiusX, radiusY) {
         var x = Math.pow(thisX - centerX, 2) / Math.pow(radiusX, 2);
         var y = Math.pow(thisY - centerY, 2) / Math.pow(radiusY, 2);
-        console.log('ellipse: ' + (x + y));
         return (x + y) <= 1.1;
     }
 
