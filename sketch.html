@@ -33,6 +33,7 @@
           <div id="endShape"><button data-ng-click="endPolygon()">End shape</button></div>
         </div>
 
+        Colors
         <div id="drawOptions">
           <div id="colors" data-ng-hide="isToolNameSelected('image')">
             <img src="images/colors/black.png" data-ng-click="selectColor('1')">
@@ -45,17 +46,16 @@
             <img src="images/colors/pink.png" data-ng-click="selectColor('8')">
             <img src="images/colors/gray.png" data-ng-click="selectColor('9')">
           </div>
-
           <div id="colorTarget" data-ng-hide="isToolNameSelected('image')">
+            Current Color:
             <div title="Line color" data-ng-class="lineColorCss" data-ng-click="changeColorTarget('line')"></div>
-            <div id="saveSketch"><button data-ng-click="saveSketch()" ng-disabled="midPolyDraw==true">Save</button></div>
-            <div id="loadSketch"><button data-ng-click="loadSketch()" ng-disabled="midPolyDraw==true">Load</button></div>
-            <div id="newSketch"><button data-ng-click="newSketch()" ng-disabled="midPolyDraw==true">New</button></div>
+            <div class="controlSel" id="saveSketch"><button data-ng-click="saveSketch()" ng-disabled="midPolyDraw==true">Save</button></div>
+            <div class="controlSel" id="loadSketch"><button data-ng-click="loadSketch()" ng-disabled="midPolyDraw==true">Load</button></div>
+            <div class="controlSel" id="newSketch"><button data-ng-click="newSketch()" ng-disabled="midPolyDraw==true">New</button></div>
             <br>
-            <span>Line</span>
           </div>
-
           <div id="lineWidth" data-ng-hide="isToolNameSelected('image')">
+            Line Width
             <input type="radio" name="lineWidth" value="small" title="small" data-ng-model="lineText" data-ng-click="changeLineWidth('3')">
             <input type="radio" name="lineWidth" value="medium" checked title="medium" data-ng-model="lineText" data-ng-click="changeLineWidth('5')">
             <input type="radio" name="lineWidth" value="large" title="large" data-ng-model="lineText" data-ng-click="changeLineWidth('10')">

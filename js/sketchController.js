@@ -121,8 +121,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
     };
 
     var setCanvasRatio = function () {
-        context.canvas.width = 512; //window.innerWidth * .8;
-        context.canvas.height = 512; //window.innerHeight * .8;
+        context.canvas.width = 900; //window.innerWidth * .8;
+        context.canvas.height = 600; //window.innerHeight * .8;
     }
 
 // bindings
