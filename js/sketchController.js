@@ -8,6 +8,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
     var mouseDrag = false;
     var polygonPointValues = [];
     var polygonPointIndex = 0;
+    var clipBoard = [];
+    var PASTE_OFFSET = 20;
 
     var renderPath = function (data) {
         if ($scope.tool === "rectangle" || $scope.tool === "line" || $scope.tool === "circle" || $scope.tool === "square" || $scope.tool === "ellipse" || $scope.tool === "polygon") {
@@ -159,6 +161,43 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 groups.push(selection);
                 console.log(groups);
                 break;
+
+            // C
+            case 67:
+                if(selectMode) {
+                    console.log('copy');
+
+                    //quick deep copy so new objects are created for the clipboard
+                    clipBoard = JSON.parse(JSON.stringify(selection));
+                }
+                break;
+            //
+            case 86:
+                console.log('paste');
+
+                for (var i in selection) {
+                    selection[i].LineColor = selection[i].originalColor;
+                    selection[i].isSelected = false;
+                }
+                selection = [];
+
+                for(var i=0; i<clipBoard.length; i++){
+                    if(clipBoard[i].ToolName != 'polygon'){
+                        clipBoard[i].StartX += PASTE_OFFSET;
+                        clipBoard[i].StartY += PASTE_OFFSET;
+                    }
+                    else{
+                        for(var j=0; j<clipBoard[i].Values.length; j++){
+                            clipBoard[i].Values[j].pointX += PASTE_OFFSET;
+                            clipBoard[i].Values[j].pointY += PASTE_OFFSET;
+                        }
+                    }
+                    selection.push(clipBoard[i]);
+                    sketchRenderer.addToBuffer(clipBoard[i]);
+                }
+                clipBoard = JSON.parse(JSON.stringify(selection));
+                sketchRenderer.renderAll();
+                break;
         }
     })
 
@@ -245,9 +284,6 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 				lastPoint = points[points.length - 1];
 				endPos.x = lastPoint.x;
 				endPos.y = lastPoint.y;
-
-                // console.log("lastPoint: " + JSON.stringify(lastPoint));
-
 
                 //if tool is polygon, need to switch to line for createRenderObject for proper "ghosting" effect
                 //polygons render differently than lines so without this it wouldn't happen
