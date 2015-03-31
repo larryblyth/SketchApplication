@@ -187,9 +187,9 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                         clipBoard[i].StartY += PASTE_OFFSET;
                     }
                     else{
-                        for(var j=0; j<clipBoard[i].Values.length; j++){
-                            clipBoard[i].Values[j].pointX += PASTE_OFFSET;
-                            clipBoard[i].Values[j].pointY += PASTE_OFFSET;
+                        for(var j=0; j<clipBoard[i].Points.length; j++){
+                            clipBoard[i].Points[j].x += PASTE_OFFSET;
+                            clipBoard[i].Points[j].y += PASTE_OFFSET;
                         }
                     }
                     selection.push(clipBoard[i]);

@@ -382,7 +382,7 @@ sketchApp.factory("sketchRenderer", function () {
                         }
                         break;
                     case "polygon":
-                        var points = buffer[i].numPoints;
+                        var points = buffer[i].Points;
                         for(var j = 0; j < points.length - 1; j++){
                             found = CheckClickingLine(thisX,thisY,points[j].x, points[j+1].x, points[j].y, points[j+1].y);
                             if(found){
