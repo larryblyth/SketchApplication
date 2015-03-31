@@ -284,7 +284,32 @@ sketchApp.factory("sketchRenderer", function () {
                         }
                         break;
                     case "rectangle":
-                        //To-Do
+                        var recStartX = buffer[i].StartX;
+                        var recStartY = buffer[i].StartY;
+                        var recWidth = buffer[i].Width;
+                        var recHeight = buffer[i].Height;
+
+                        if(recHeight >= 0 && recWidth < 0) {
+                            if (thisX >= recStartX + recWidth && thisX <= recStartX && thisY <= recStartY + recHeight && thisY >= recStartY) {
+                                return buffer[i];
+                            }
+                        }
+                        else if(recHeight < 0 && recWidth >= 0) {
+                            if (thisX <= recStartX + recWidth && thisX >= recStartX && thisY >= recStartY + recHeight && thisY <= recStartY) {
+                                return buffer[i];
+                            }
+                        }
+                        else if(recHeight < 0 && recWidth < 0) {
+                            if (thisX >= recStartX + recWidth && thisX <= recStartX && thisY >= recStartY + recHeight && thisY <= recStartY) {
+                                return buffer[i];
+                            }
+                        }
+                        else { //both positive
+                            if (thisX <= recStartX + recWidth && thisX >= recStartX && thisY <= recStartY + recHeight && thisY >= recStartY) {
+                                return buffer[i];
+                            }
+                        }
+
                         break;
                     case "circle":
                         //To-Do
@@ -293,7 +318,21 @@ sketchApp.factory("sketchRenderer", function () {
                         //To-Do
                         break;
                     case "square":
-                        //To-Do
+
+                        var sqStartX = buffer[i].StartX;
+                        var sqStartY = buffer[i].StartY;
+                        var sqSide = buffer[i].Side;
+
+                        if(sqSide < 0) {
+                            if (thisX >= sqStartX + sqSide && thisX <= sqStartX && thisY >= sqStartY + sqSide && thisY <= sqStartY) {
+                                return buffer[i];
+                            }
+                        }
+                        else { //both positive
+                            if (thisX <= sqStartX + sqSide && thisX >= sqStartX && thisY <= sqStartY + sqSide && thisY >= sqStartY) {
+                                return buffer[i];
+                            }
+                        }
                         break;
                     case "polygon":
                         //To-Do

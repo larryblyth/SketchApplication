@@ -3,6 +3,8 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 	'use strict';
 	var colors,colorValue,canvas,context,points,lineColorNumber,fillColorNumber,mouseDown,startPos,endPos,createRenderObject,renderPath,backgroundImage, ResetCanvasRatio, prevX = 0, prevY = 0, thisX = 0, thisY = 0, selectMode, selection= 'none';
     var polygonPoints = 0;
+    //var polygonPointValues = [];
+    //var polygonPointIndex = 0;
     var renderPath = function (data) {
         if ($scope.tool === "rectangle" || $scope.tool === "line" || $scope.tool === "circle" || $scope.tool === "square" || $scope.tool === "ellipse" || $scope.tool === "polygon") {
             sketchRenderer.renderAll();
@@ -92,6 +94,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     EndX: endPos.x,
                     EndY: endPos.y,
                     Points: polygonPoints
+
                 };
                 break;
             default:
@@ -183,7 +186,10 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 				renderPath(data);				
 			}			
 		};
-
+                    //values
+                        //points
+                            //x
+                            //y
 		canvas.onmouseup = function (e) {
             if(selectMode) return;
 
@@ -200,8 +206,10 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 } else if(polygonPoints==0) {
                     //this is start of polygon
                     document.getElementById("endShape").style.display='block';
+
                     mouseDownEvent(e);
                     polygonPoints++;
+
                     //store this point so can detect if they click on it later
                     prevX = thisX;
                     prevY = thisY;
