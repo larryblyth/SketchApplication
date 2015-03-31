@@ -142,8 +142,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
             // S
             case 83:
                 console.log('S');
-                selectMode = !selectMode;
-                mouseDown = false;
+                $scope.changeSelectMode();
                 break;
 
             // Backspace, delete, 'd'
@@ -240,12 +239,33 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
             y = (e.pageY - canvas.offsetTop) - offset;
             // console.log('x: ' + x + ' y: ' + y );
 
+            // Move shapes
             if(mouseDown && selectMode) {
                 for (var i in selection) {
                     var shape = selection[i];
+                    var dx = x - lastX;
+                    var dy = y - lastY;
                     // console.log('shape: ' + shape)
-                    shape.StartX = shape.StartX + x - lastX;
-                    shape.StartY = shape.StartY + y - lastY;
+                    if (shape.Points) {
+                        for (var j in shape.Points) {
+                            // var p = shape.Values[j];
+                            shape.Points[j].x = shape.Points[j].x + dx;
+                            shape.Points[j].y = shape.Points[j].y + dy;
+                            // renderPath(shape.Points[j]);
+                            // p.x = p.x + dx;
+                            // p.y = p.y + dy;
+                            // console.log('px ' + p.x + ' py ' + p.y);
+                        }
+                        sketchRenderer.renderAll();
+                    }
+                    if (shape.EndX) {
+                        shape.EndX = shape.EndX + dx;
+                        shape.EndY = shape.EndY + dy;
+                    }
+                    if (shape.StartX) {
+                        shape.StartX = shape.StartX + dx;
+                        shape.StartY = shape.StartY + dy;
+                    }
                     renderPath(shape);
                 }
                 lastX = x;
@@ -264,7 +284,6 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 				lastPoint = points[points.length - 1];
 				endPos.x = lastPoint.x;
 				endPos.y = lastPoint.y;
-
 
                 //if tool is polygon, need to switch to line for createRenderObject for proper "ghosting" effect
                 //polygons render differently than lines so without this it wouldn't happen
@@ -292,7 +311,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     
                 } else {
                     var shape = sketchRenderer.findSelection(thisX,thisY);
-                    if (shape != 'none') {
+                    if (shape && shape != 'none') {
                         console.log('selected something!');
                         if (shape.isSelected) {
                             // Unselect
@@ -382,14 +401,6 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
             }
 		};
 
-        var unselect = function(shapes) {
-            for (var i in shapes) {
-                shapes[i].LineColor = shapes[i].originalColor;
-                shapes[i].isSelected = false;
-                renderPath(shapes[i]);
-            }
-        };
-
         var mouseDownEvent = function(e) {
             points.push({
                 x: (e.pageX - canvas.offsetLeft) - offset,
@@ -410,6 +421,14 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
             renderPath(data);
         }
 	};
+
+    var unselect = function(shapes) {
+        for (var i in shapes) {
+            shapes[i].LineColor = shapes[i].originalColor;
+            shapes[i].isSelected = false;
+            renderPath(shapes[i]);
+        }
+    };
 
 	$scope.selectColor = function (color) {
 		switch ($scope.colorTarget) {
@@ -491,8 +510,10 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
     };
 
     $scope.changeSelectMode = function () {
-        if(selectMode) selectMode = false;
-        else selectMode = true;
+        selectMode = !selectMode;
+        mouseDown = false;
+        unselect(selection);
+        selection.length = 0;
         console.log('select mode is: '+selectMode);
     }
 
