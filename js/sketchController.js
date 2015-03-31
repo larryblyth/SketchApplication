@@ -4,6 +4,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
 	var colors,colorValue,canvas,context,points,lineColorNumber,fillColorNumber,mouseDown,startPos,endPos,createRenderObject,renderPath,backgroundImage, ResetCanvasRatio, prevX = 0, prevY = 0, thisX = 0, thisY = 0, selectMode, selection=[];
     var polygonPoints = 0;
     var groups = [];
+    var currentGroupIndex;
     var lastX, lastY;
     var mouseDrag = false;
     var polygonPointValues = [];
@@ -158,8 +159,18 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
             // G
             case 71:
                 console.log('Group');
-                groups.push(selection);
-                console.log(groups);
+                var shapes = [];
+                for (var i in selection) {
+                    shapes.push(selection[i]);
+                }
+                groups.push(shapes);
+                console.log('groups' + groups);
+                break;
+
+            // U
+            case 85:
+                console.log('Ungroup');
+                groups.splice(currentGroupIndex, 1);
                 break;
 
             // C
@@ -313,15 +324,42 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                     var shape = sketchRenderer.findSelection(thisX,thisY);
                     if (shape && shape != 'none') {
                         console.log('selected something!');
+
+                        var grouped = false;
+                        var shapes;
+                        console.log('mouse groups ' + groups);
+                        for (var i in groups) {
+                            // console.log('mouse i ' + groups[i]);
+                            var j = groups[i].indexOf(shape);
+                            if (j != -1) {
+                                // Shape is in group
+                                grouped = true;
+                                shapes = groups[i];
+                                currentGroupIndex = i;
+                                // for (var k in groups[i]) {
+                                //     selection.push(groups[i][k]);
+                                // }
+                            }
+                        }
+                        if (!grouped) shapes = [shape];
+
                         if (shape.isSelected) {
                             // Unselect
-                            unselect([shape]);
-                            selection.splice(selection.indexOf(shape), 1);
+                            unselect(shapes);
+                            for (var i in shapes) {
+                                selection.splice(selection.indexOf(shapes[i]), 1);
+                            }
                         } else {
                             // Select
-                            shape.LineColor = colorValue[4];
-                            shape.isSelected = true;
-                            selection.push(shape);
+
+                            for (var i in shapes) {
+
+                                shapes[i].LineColor = colorValue[4];
+                                shapes[i].isSelected = true;
+
+                                selection.push(shapes[i]);
+                            }
+                            // if (!grouped) selection.push(shape);
                         }
                         renderPath(shape);
                     } else {
@@ -408,7 +446,7 @@ sketchApp.controller("sketchController", function ($scope, sketchRenderer) {
                 color: colorValue[lineColorNumber]
             });
 
-            console.log("push in DOWN: " + (e.pageX - canvas.offsetLeft) - offset + " " + (e.pageY - canvas.offsetTop) - offset);
+            // console.log("push in DOWN: " + (e.pageX - canvas.offsetLeft) - offset + " " + (e.pageY - canvas.offsetTop) - offset);
 
             //mouseDown = true;
             startPos.x = points[points.length-1].x;
