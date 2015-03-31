@@ -313,7 +313,23 @@ sketchApp.factory("sketchRenderer", function () {
 
                     }
                     else if(top.type == 'move'){
-
+                        var shape = top.actionItems[i];
+                            var dx = top.dx;
+                            var dy = top.dy;
+                            if (shape.Points) {
+                                for (var j in shape.Points) {
+                                    shape.Points[j].x = shape.Points[j].x - dx;
+                                    shape.Points[j].y = shape.Points[j].y - dy;
+                                }
+                            }
+                            if (shape.EndX) {
+                                shape.EndX = shape.EndX - dx;
+                                shape.EndY = shape.EndY - dy;
+                            }
+                            if (shape.StartX) {
+                                shape.StartX = shape.StartX - dx;
+                                shape.StartY = shape.StartY - dy;
+                            }
                     }
                     undoStack.push(top);
                 }
