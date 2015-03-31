@@ -250,32 +250,36 @@ sketchApp.factory("sketchRenderer", function () {
 
 		undo: function () {
             // var top = buffer.pop();
-            var top = undoStack.pop();
+            if(undoStack.length > 0) {
+                var top = undoStack.pop();
 
-            if(top.isAction == true){
-                for(var i=0; i< top.actionItems.length; i++){
-                    if(top.type == 'delete'){
-                        buffer.push(top.actionItems[i]);
-                    }
-                    else if(top.type == 'paste'){
+                if (top.isAction == true) {
+                    for (var i = 0; i < top.actionItems.length; i++) {
+                        if (top.type == 'delete') {
+                            buffer.push(top.actionItems[i]);
+                        }
+                        else if (top.type == 'paste') {
 
-                    }
-                    else if(top.type == 'group'){
+                        }
+                        else if (top.type == 'group') {
 
-                    }
-                    else if(top.type == 'ungroup'){
+                        }
+                        else if (top.type == 'ungroup') {
 
-                    }
-                    else if(top.type == 'move'){
+                        }
+                        else if (top.type == 'move') {
 
+                        }
+                        redoStack.push(top);
                     }
+                }
+                else {
+                    buffer.pop();
                     redoStack.push(top);
                 }
+                console.log('undo: ' + JSON.stringify(undoStack));
+                document.getElementById("redobutton").style.display = 'block';
             }
-            else{
-                redoStack.push(top);
-            }
-            document.getElementById("redobutton").style.display='block';
             renderAll();
 		},
 
@@ -299,15 +303,16 @@ sketchApp.factory("sketchRenderer", function () {
                     else if(top.type == 'move'){
 
                     }
-
-                    buffer.push(top);
+                    undoStack.push(top);
                 }
             }
             else{
-                redoStack.push(top);
+                buffer.push(top);
+                undoStack.push(top);
             }
-
+            console.log('redo: ' + JSON.stringify(redoStack));
             if(redoStack.length==0) document.getElementById("redobutton").style.display='none';
+            renderAll();
         },
 
         save: function (sketchName) {
